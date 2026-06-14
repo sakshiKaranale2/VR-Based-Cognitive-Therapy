@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VR Cognitive Therapy - Immersive Mental Health Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+
+            
+            <h1 class="logo">VR Cognitive Therapy</h1>
+            
+            <div class="header-right">
+                <div class="avatar-circle">Avatar</div>
+            </div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="patient-dashboard.html" id="patient-dashboard-link" class="hidden">My Dashboard</a></li>
+                <li><a href="doctor-dashboard.html" id="doctor-dashboard-link" class="hidden">Doctor Dashboard</a></li>
+                <li><a href="#" id="profile-link" class="hidden" onclick="showProfileInfo(event)">Profile</a></li>
+                <li><a href="#" id="login-link">Login</a></li>
+
+                <li><a href="#" id="logout-link" class="hidden" onclick="handleLogout()">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    
+
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
+    <!-- Greeting Section -->
+    <section class="greeting-section">
+        <h1 id="greeting-text">Welcome to VR Cognitive Therapy!</h1>
+        <p class="greeting-subtext">Your immersive platform for mental health treatment through Virtual Reality Cognitive Behavioral Therapy.</p>
+    </section>
+
+    <!-- Stress Detection Section -->
+    <section class="stress-detection-section">
+        <div class="stress-detection-container">
+            <div class="stress-detection-header">
+                <h1 class="stress-detection-title"><i class="fas fa-chart-line"></i> Stress Level Detection</h1>
+                <p class="stress-detection-subtitle">Enter patient details and EEG signals to detect stress level and recommend VR therapy</p>
+            </div>
+
+            <div class="stress-detection-form-wrapper">
+                <!-- Patient Details Section -->
+                <div class="form-section patient-details-section-form">
+                    <div class="section-header">
+                        <span class="section-icon"><i class="fas fa-user"></i></span>
+                        <h3>Patient Information</h3>
+                    </div>
+                    <div class="form-row-group">
+                        <div class="form-field">
+                            <label for="patient-name-input">
+                                <span class="label-icon"><i class="fas fa-user"></i></span>
+                                Patient Name <span class="required">*</span>
+                            </label>
+                            <input type="text" id="patient-name-input" placeholder="Enter patient's full name" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="patient-age-input">
+                                <span class="label-icon"><i class="fas fa-birthday-cake"></i></span>
+                                Patient Age <span class="optional">(Optional)</span>
+                            </label>
+                            <input type="number" id="patient-age-input" placeholder="Enter age" min="1" max="120">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EEG Signals Section -->
+                <div class="form-section eeg-signals-section">
+                    <div class="section-header">
+                        <span class="section-icon"><i class="fas fa-brain"></i></span>
+                        <h3>EEG Brain Wave Signals</h3>
+                    </div>
+                    <div class="eeg-inputs-grid">
+                        <div class="eeg-input-field">
+                            <label for="beta">
+                                <span class="wave-icon">β</span>
+                                Beta Waves
+                            </label>
+                            <input type="number" id="beta" placeholder="Enter Beta Value" step="0.01" required>
+                            <span class="input-hint">High frequency waves</span>
+                        </div>
+
+                        <div class="eeg-input-field">
+                            <label for="gamma">
+                                <span class="wave-icon">γ</span>
+                                Gamma Waves
+                            </label>
+                            <input type="number" id="gamma" placeholder="Enter Gamma Value" step="0.01" required>
+                            <span class="input-hint">Highest frequency waves</span>
+                        </div>
+
+                        <div class="eeg-input-field">
+                            <label for="delta">
+                                <span class="wave-icon">δ</span>
+                                Delta Waves
+                            </label>
+                            <input type="number" id="delta" placeholder="Enter Delta Value" step="0.01" required>
+                            <span class="input-hint">Low frequency waves</span>
+                        </div>
+
+                        <div class="eeg-input-field">
+                            <label for="alpha">
+                                <span class="wave-icon">α</span>
+                                Alpha Waves
+                            </label>
+                            <input type="number" id="alpha" placeholder="Enter Alpha Value" step="0.01" required>
+                            <span class="input-hint">Relaxation waves</span>
+                        </div>
+
+                        <div class="eeg-input-field">
+                            <label for="theta">
+                                <span class="wave-icon">θ</span>
+                                Theta Waves
+                            </label>
+                            <input type="number" id="theta" placeholder="Enter Theta Value" step="0.01" required>
+                            <span class="input-hint">Meditation waves</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="predictStress()" class="predict-btn-modern">
+                    <span class="btn-icon"><i class="fas fa-search"></i></span>
+                    <span class="btn-text">Detect Stress Level</span>
+                    <span class="btn-loader hidden"><i class="fas fa-spinner fa-spin"></i> Analyzing...</span>
+                </button>
+            </div>
+
+            <section id="loading" class="hidden loading">
+                <div class="loading-animation">
+                    <div class="spinner"></div>
+                    <p>Analyzing your stress level...</p>
+                </div>
+            </section>
+
+        <div id="result" class="hidden">
+            <div class="result-card">
+                <div class="result-header">
+                    <h2><i class="fas fa-chart-bar"></i> Stress Level Detection Result</h2>
+                    <p class="patient-info-display" id="patient-info-display"></p>
+                </div>
+                <div class="stress-level-display">
+                    <div class="stress-meter">
+                        <div class="stress-bar" id="stress-bar"></div>
+                    </div>
+                    <p id="predictionText" class="stress-result"></p>
+                    <p id="stress-description" class="stress-description"></p>
+                </div>
+            </div>
+        </div>
+
+            <!-- VR Environment Recommendations -->
+            <section id="vr-recommendations" class="hidden vr-recommendations-section">
+                <h2 class="recommendation-title"><i class="fas fa-bullseye"></i> Recommended VR Environments for You</h2>
+                <p class="recommendation-subtitle">Based on your stress level, we recommend these immersive therapy environments:</p>
+                <div class="recommended-environments" id="recommended-environments-list"></div>
+                <button class="start-vr-flow-btn hidden" id="doctor-start-vr-btn" onclick="startDoctorVRFlow()"><i class="fas fa-user-md"></i> Start VR Therapy Session (Doctor Only)</button>
+                <p class="doctor-note-info hidden" id="doctor-note-info">Note: Only doctors can start VR therapy sessions. Please log in as a doctor to begin.</p>
+            </section>
+        </div>
+    </section>
+
+    <!-- User Authentication Modal -->
+    <div id="auth-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeAuthModal()">&times;</span>
+            <h2 id="auth-title">Login</h2>
+            <div id="auth-form">
+                <input type="email" id="auth-email" placeholder="Email" required>
+                <input type="password" id="auth-password" placeholder="Password" required>
+                <div id="role-selection" class="hidden">
+                    <label>Registering as:</label>
+                    <div class="role-options">
+                        <label class="role-option">
+                            <input type="radio" name="user-role" value="doctor" checked>
+                            <span>👨‍⚕️ Doctor</span>
+                        </label>
+                    </div>
+                    <p style="font-size: 12px; color: #558B6E; margin-top: 10px; font-style: italic;">
+                        Note: Only doctors can register. This system is for managing patient records and VR therapy sessions.
+                    </p>
+                </div>
+                <button onclick="handleAuth()" id="auth-button">Login</button>
+                <p id="auth-switch">Don't have an account? <a href="#" onclick="toggleAuthMode()">Sign Up</a></p>
+                <p id="auth-error" class="error-message hidden"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Doctor VR Session Modal -->
+    <div id="doctor-vr-modal" class="modal hidden">
+        <div class="vr-setup-content">
+            <div class="vr-setup-header">
+                <h2><i class="fas fa-user-md"></i> Doctor VR Therapy Session</h2>
+                <span class="close-modal" onclick="closeDoctorVRModal()">&times;</span>
+            </div>
+            <div class="doctor-vr-steps">
+                <!-- Step 0: Enter Patient Information -->
+                <div class="doctor-vr-step active" id="doctor-step-0">
+                    <div class="step-icon"><i class="fas fa-user"></i></div>
+                    <h3>Enter Patient Information</h3>
+                    <p id="doctor-patient-info-note">Please enter the patient's details to begin the VR therapy session.</p>
+                    <div class="patient-entry-form">
+                        <div class="form-group">
+                            <label for="doctor-patient-name">Patient Name *</label>
+                            <input type="text" id="doctor-patient-name" placeholder="Enter patient's full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="doctor-patient-email">Patient Email ID *</label>
+                            <input type="email" id="doctor-patient-email" placeholder="Enter patient's email" required>
+                            <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">Used for unique patient tracking and progress monitoring</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="doctor-patient-age">Patient Age (Optional)</label>
+                            <input type="number" id="doctor-patient-age" placeholder="Enter age" min="1" max="120">
+                        </div>
+                        <div id="doctor-stress-level-display" class="hidden" style="background: #f0f8f4; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #87C5A4;">
+                            <p style="margin: 0; color: #2E7D32; font-weight: 600;"><i class="fas fa-info-circle"></i> Detected Stress Level: <span id="doctor-detected-stress-level" style="color: #4A7C59;">-</span></p>
+                            <p style="margin: 5px 0 0 0; font-size: 12px; color: #666;">Stress level detected from homepage. Skipping EEG detection.</p>
+                        </div>
+                        <button class="step-btn" onclick="proceedToVRSession()" id="doctor-proceed-btn"><i class="fas fa-rocket"></i> Start VR Therapy Session</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VR Setup Flow Modal -->
+    <div id="vr-setup-modal" class="modal hidden">
+        <div class="vr-setup-content">
+            <div class="vr-setup-header">
+                <h2>VR Therapy Setup</h2>
+                <span class="close-modal" onclick="closeVRSetupModal()">&times;</span>
+            </div>
+            <div class="vr-setup-steps">
+                <!-- Step 1 -->
+                <div class="vr-step active" id="step-1">
+                    <div class="step-icon"><i class="fas fa-hourglass-half"></i></div>
+                    <h3>Step 1: Please Wait</h3>
+                    <p>Our assistant will provide the VR headset. Please wait for a moment...</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <button class="step-btn" onclick="nextVRStep(1)">Continue</button>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="vr-step hidden" id="step-2">
+                    <div class="step-icon"><i class="fas fa-glasses"></i></div>
+                    <h3>Step 2: Wear the VR Headset</h3>
+                    <p>Please wear the VR headset that our assistant has provided. Make sure it fits comfortably.</p>
+                    <div class="vr-headset-animation">
+                        <div class="headset-icon"><i class="fas fa-vr-cardboard"></i></div>
+                    </div>
+                    <button class="step-btn" onclick="nextVRStep(2)">I've Worn the Headset</button>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="vr-step hidden" id="step-3">
+                    <div class="step-icon"><i class="fas fa-bullseye"></i></div>
+                    <h3>Step 3: Ready for Therapy</h3>
+                    <p>For reducing your stress, let's begin your therapy session. Make sure you're comfortable and ready.</p>
+                    <div class="ready-checklist">
+                        <label><input type="checkbox" id="check-comfortable"> I'm in a comfortable position</label>
+                        <label><input type="checkbox" id="check-ready"> I'm ready to begin</label>
+                        <label><input type="checkbox" id="check-environment"> My environment is quiet</label>
+                    </div>
+                    <button class="step-btn" onclick="nextVRStep(3)" id="start-therapy-btn" disabled>Start Therapy Session</button>
+                </div>
+
+                <!-- Step 4: Doctor Confirmation -->
+                <div class="vr-step hidden" id="step-4">
+                    <div class="step-icon"><i class="fas fa-user-md"></i></div>
+                    <h3>Step 4: Doctor Confirmation</h3>
+                    <p>Please wait for your doctor to confirm and start the therapy session.</p>
+                    <div class="doctor-confirmation-box" id="doctor-confirmation-box">
+                        <div class="waiting-indicator">
+                            <div class="loading-spinner"></div>
+                            <p>Waiting for doctor to start the session...</p>
+                            <p class="doctor-note">The doctor will manually click "Start Session" when ready.</p>
+                        </div>
+                        <div class="doctor-controls hidden" id="doctor-controls">
+                            <p class="doctor-message">Doctor: Review patient readiness and start the session when ready.</p>
+                            <button class="step-btn doctor-start-btn" onclick="doctorStartSession()"><i class="fas fa-user-md"></i> Start Session</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5: Entering VR Environment -->
+                <div class="vr-step hidden" id="step-5">
+                    <div class="step-icon"><i class="fas fa-globe"></i></div>
+                    <h3>Step 5: Entering VR Environment</h3>
+                    <p>You're about to enter your recommended VR therapy environment. Take a deep breath and relax.</p>
+                    <div class="vr-environment-preview" id="environment-preview">
+                        <div class="preview-loading">
+                            <div class="loading-spinner"></div>
+                            <p>Loading Unreal Engine Environment...</p>
+                        </div>
+                    </div>
+                    <div class="vr-guidance">
+                        <h4>During your session:</h4>
+                        <ul>
+                            <li>Follow the guided breathing exercises</li>
+                            <li>Interact with the environment naturally</li>
+                            <li>Take breaks if needed</li>
+                            <li>Focus on relaxation and stress relief</li>
+                        </ul>
+                    </div>
+                    <button class="step-btn" onclick="enterVREnvironment()">Enter VR Environment</button>
+                </div>
+
+                <!-- Step 6: Therapy in Progress -->
+                <div class="vr-step hidden" id="step-6">
+                    <div class="step-icon"><i class="fas fa-sparkles"></i></div>
+                    <h3>Step 6: Therapy in Progress</h3>
+                    <p>You're now in your VR therapy environment. Enjoy your immersive stress relief session!</p>
+                    <div class="therapy-session-view" id="therapy-session-view">
+                        <div class="session-timer">
+                            <span id="session-time">00:00</span>
+                        </div>
+                        <div class="session-progress-info">
+                            <p>Minimum session time: 3 minutes</p>
+                            <p id="session-status">Session in progress...</p>
+                        </div>
+                        <div class="session-controls">
+                            <button class="control-btn" onclick="pauseSession()"><i class="fas fa-pause"></i> Pause</button>
+                            <button class="control-btn" onclick="endSession()" id="end-session-btn" disabled><i class="fas fa-stop"></i> End Session</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 7: Patient Details & Feedback Form -->
+                <div class="vr-step hidden" id="step-7">
+                    <div class="step-icon"><i class="fas fa-clipboard-list"></i></div>
+                    <h3>Session Complete - Feedback</h3>
+                    <p id="patient-info-display-feedback">Thank you for completing your VR therapy session! Please provide feedback:</p>
+                    <form id="session-feedback-form" onsubmit="submitSessionFeedback(event)">
+                        <!-- Hidden patient fields (auto-populated from stress detection) -->
+                        <input type="hidden" id="patient-name" value="">
+                        <input type="hidden" id="patient-age" value="">
+                        
+                        <!-- Feedback Section -->
+                        <div class="feedback-section-form">
+                            <h4>Session Feedback</h4>
+                            <div class="feedback-form-group">
+                                <label>Do you feel more relaxed than before the session? *</label>
+                                <div class="relaxation-buttons">
+                                    <button type="button" class="relaxation-btn" data-relaxed="yes" onclick="selectRelaxation('yes')">
+                                        <span class="btn-icon"><i class="fas fa-smile"></i></span>
+                                        <span>Yes, Much More Relaxed</span>
+                                    </button>
+                                    <button type="button" class="relaxation-btn" data-relaxed="somewhat" onclick="selectRelaxation('somewhat')">
+                                        <span class="btn-icon"><i class="fas fa-meh"></i></span>
+                                        <span>Somewhat Relaxed</span>
+                                    </button>
+                                    <button type="button" class="relaxation-btn" data-relaxed="no" onclick="selectRelaxation('no')">
+                                        <span class="btn-icon"><i class="fas fa-frown"></i></span>
+                                        <span>No Change</span>
+                                    </button>
+                                </div>
+                                <input type="hidden" id="relaxation-status" required>
+                            </div>
+                            
+                            <div class="feedback-form-group">
+                                <label>How would you rate your stress level after this session? *</label>
+                                <div class="rating-buttons">
+                                    <button type="button" class="rating-btn" data-rating="1" onclick="selectRating(1)"><i class="fas fa-exclamation-triangle"></i> Very High</button>
+                                    <button type="button" class="rating-btn" data-rating="2" onclick="selectRating(2)"><i class="fas fa-exclamation-circle"></i> High</button>
+                                    <button type="button" class="rating-btn" data-rating="3" onclick="selectRating(3)"><i class="fas fa-minus-circle"></i> Moderate</button>
+                                    <button type="button" class="rating-btn" data-rating="4" onclick="selectRating(4)"><i class="fas fa-check-circle"></i> Low</button>
+                                    <button type="button" class="rating-btn" data-rating="5" onclick="selectRating(5)"><i class="fas fa-check-double"></i> Very Low</button>
+                                </div>
+                                <input type="hidden" id="stress-rating" required>
+                            </div>
+                            
+                            <div class="feedback-form-group">
+                                <label>How effective was this VR therapy session? *</label>
+                                <div class="effectiveness-slider">
+                                    <input type="range" id="effectiveness-rating" min="1" max="5" value="3" oninput="updateEffectivenessLabel(this.value)">
+                                    <div class="slider-labels">
+                                        <span>Not Effective</span>
+                                        <span id="effectiveness-value">3</span>
+                                        <span>Very Effective</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="feedback-form-group">
+                                <label>Additional Notes (Optional):</label>
+                                <textarea id="feedback-comments" rows="4" placeholder="Any additional observations or comments..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="submit-feedback-btn">Submit Session Data</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VR Therapy Environments Section -->
+    <section class="vr-environments-section">
+        <h2 class="section-title">Immersive Therapy Environments</h2>
+        <p class="section-subtitle">Choose from our five immersive VR environments designed for stress relief and cognitive therapy</p>
+        
+        <div class="vr-environments-grid">
+            <!-- Environment 1: Beach Paradise -->
+            <div class="vr-environment-card" data-environment="beach">
+                <div class="vr-card-image beach-bg"></div>
+                <div class="vr-card-content">
+                    <h3><i class="fas fa-umbrella-beach"></i> Beach Paradise</h3>
+                    <p>Relax on a serene beach with calming ocean waves. Perfect for stress relief and anxiety management.</p>
+                    <div class="vr-features">
+                        <span>Guided Breathing</span>
+                        <span>Ocean Sounds</span>
+                        <span>Sunset Views</span>
+                    </div>
+                    <button class="vr-start-btn" onclick="startVRTherapy('beach')">Start Therapy</button>
+                </div>
+            </div>
+
+            <!-- Environment 2: Forest Sanctuary -->
+            <div class="vr-environment-card" data-environment="forest">
+                <div class="vr-card-image forest-bg"></div>
+                <div class="vr-card-content">
+                    <h3><i class="fas fa-tree"></i> Forest Sanctuary</h3>
+                    <p>Immerse yourself in a peaceful forest with nature sounds. Ideal for mindfulness and relaxation.</p>
+                    <div class="vr-features">
+                        <span>Nature Sounds</span>
+                        <span>Mindfulness</span>
+                        <span>Bird Chirping</span>
+                    </div>
+                    <button class="vr-start-btn" onclick="startVRTherapy('forest')">Start Therapy</button>
+                </div>
+            </div>
+
+            <!-- Environment 3: Mountain Peak -->
+            <div class="vr-environment-card" data-environment="mountain">
+                <div class="vr-card-image mountain-bg"></div>
+                <div class="vr-card-content">
+                    <h3><i class="fas fa-mountain"></i> Mountain Peak</h3>
+                    <p>Experience the tranquility of a mountain peak with breathtaking views. Great for perspective and clarity.</p>
+                    <div class="vr-features">
+                        <span>Panoramic Views</span>
+                        <span>Meditation</span>
+                        <span>Peaceful Ambiance</span>
+                    </div>
+                    <button class="vr-start-btn" onclick="startVRTherapy('mountain')">Start Therapy</button>
+                </div>
+            </div>
+
+            <!-- Environment 4: Zen Garden -->
+            <div class="vr-environment-card" data-environment="zen">
+                <div class="vr-card-image zen-bg"></div>
+                <div class="vr-card-content">
+                    <h3><i class="fas fa-leaf"></i> Zen Garden</h3>
+                    <p>Find inner peace in a traditional Japanese zen garden. Perfect for deep relaxation and focus.</p>
+                    <div class="vr-features">
+                        <span>Zen Meditation</span>
+                        <span>Koi Pond</span>
+                        <span>Bamboo Sounds</span>
+                    </div>
+                    <button class="vr-start-btn" onclick="startVRTherapy('zen')">Start Therapy</button>
+                </div>
+            </div>
+
+            <!-- Environment 5: Space Observatory -->
+            <div class="vr-environment-card" data-environment="space">
+                <div class="vr-card-image space-bg"></div>
+                <div class="vr-card-content">
+                    <h3><i class="fas fa-rocket"></i> Space Observatory</h3>
+                    <p>Explore the cosmos from a space observatory. Helps with perspective and reducing overwhelming feelings.</p>
+                    <div class="vr-features">
+                        <span>Stargazing</span>
+                        <span>Cosmic Sounds</span>
+                        <span>Perspective Shift</span>
+                    </div>
+                    <button class="vr-start-btn" onclick="startVRTherapy('space')">Start Therapy</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Therapy Information Section -->
+    <section class="therapy-info-section">
+        <h2 class="section-title">About Our VR Therapy</h2>
+        <div class="info-grid">
+            <div class="info-card">
+                <h3><i class="fas fa-bullseye"></i> Personalized Sessions</h3>
+                <p>Each therapy session is tailored to your specific needs and triggers, providing a customized experience.</p>
+            </div>
+            <div class="info-card">
+                <h3><i class="fas fa-chart-line"></i> Real-time Tracking</h3>
+                <p>Your responses and progress are tracked in real-time to provide personalized feedback and insights.</p>
+            </div>
+            <div class="info-card">
+                <h3><i class="fas fa-shield-alt"></i> Safe Environment</h3>
+                <p>Experience controlled, safe environments that simulate real-life scenarios without the associated risks.</p>
+            </div>
+            <div class="info-card">
+                <h3><i class="fas fa-mobile-alt"></i> Accessible Anywhere</h3>
+                <p>Access therapy sessions from anywhere using affordable VR hardware or mobile devices.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- VR Therapy Information Section -->
+    <section class="vr-therapy-info-section">
+        <h2 class="section-title">What is Virtual Reality Therapy?</h2>
+        <div class="vr-info-content">
+            <p class="vr-info-intro">
+                Virtual Reality Therapy integrates digital environments into therapeutic practices to enhance treatment 
+                for various mental health conditions. By engaging in simulated, interactive experiences, individuals 
+                can process emotions, practice coping techniques, and desensitize distressing stimuli in a safe and controlled way.
+            </p>
+            
+            <div class="vr-conditions-grid">
+                <div class="condition-card">
+                    <h3>😰 Anxiety Disorders & Stress Management</h3>
+                    <ul>
+                        <li>Social Anxiety: Simulated social interactions help build confidence</li>
+                        <li>Generalized Anxiety: Relaxation-focused VR exercises</li>
+                        <li>Panic Disorders: Exposure-based therapy for safe trigger management</li>
+                    </ul>
+                </div>
+                
+                <div class="condition-card">
+                    <h3><i class="fas fa-shield-alt"></i> PTSD & Trauma Recovery</h3>
+                    <ul>
+                        <li>Trauma Reprocessing: Guided scenarios for gradual healing</li>
+                        <li>Military & Combat PTSD: Controlled exposure therapy</li>
+                        <li>Assault & Abuse Trauma: Safe immersion exercises</li>
+                    </ul>
+                </div>
+                
+                <div class="condition-card">
+                    <h3><i class="fas fa-exclamation-circle"></i> Phobia Treatment</h3>
+                    <ul>
+                        <li>Fear of Heights: Gradual exposure therapy</li>
+                        <li>Fear of Flying: Pre-flight preparation sessions</li>
+                        <li>Claustrophobia & Public Speaking: Repeated exposure practice</li>
+                    </ul>
+                </div>
+                
+                <div class="condition-card">
+                    <h3><i class="fas fa-heart"></i> Depression & Emotional Regulation</h3>
+                    <ul>
+                        <li>Mood Disorders: Interactive experiences for thought reframing</li>
+                        <li>Emotional Processing: Coping strategies for stress</li>
+                        <li>Mindfulness & Relaxation: Therapeutic landscapes</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="vr-benefits">
+                <h3>Why Choose VR Therapy?</h3>
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <span class="benefit-icon"><i class="fas fa-globe"></i></span>
+                        <h4>Immersive & Controlled</h4>
+                        <p>Tailored experiences with therapist support</p>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon"><i class="fas fa-lock"></i></span>
+                        <h4>Safe & Confidential</h4>
+                        <p>Secure and personalized therapeutic space</p>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon"><i class="fas fa-check-circle"></i></span>
+                        <h4>Proven Effectiveness</h4>
+                        <p>Studies show enhanced treatment outcomes</p>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon"><i class="fas fa-gamepad"></i></span>
+                        <h4>Engaging & Adaptive</h4>
+                        <p>Unique and interactive therapy experience</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>© 2025 VR Cognitive Therapy. All rights reserved.</p>
+        <p>Developed and Designed by <strong>Final Year BTECH RIT-CSIT Team</strong></p>
+    </footer>
+
+    <!-- Load script.js after Firebase SDKs are loaded -->
+    <script src="script.js"></script>
+    <script>
+        // Dynamic Greeting Based on Time
+        function updateGreeting() {
+            const greetingText = document.getElementById("greeting-text");
+            const hour = new Date().getHours();
+            if (hour < 12) {
+                greetingText.innerText = "Good Morning! Welcome to VR Cognitive Therapy!";
+            } else if (hour < 18) {
+                greetingText.innerText = "Good Afternoon! Ready for your therapy session?";
+            } else {
+                greetingText.innerText = "Good Evening! Let's begin your immersive therapy journey.";
+            }
+        }
+        updateGreeting();
+
+    </script>
+
+    
+</body>
+
+<!-- Popup Modal for Avatar Video -->
+<div id="avatarModal" style="
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,0.7);
+  justify-content:center; align-items:center;
+  z-index:9999;
+">
+  <div style="
+    background:white; padding:10px;
+    border-radius:12px;
+    width:80%; max-width:700px;
+    position:relative;
+  ">
+    <span onclick="closeAvatarVideo()" style="
+      position:absolute; right:10px; top:5px;
+      font-size:28px; cursor:pointer;
+    ">&times;</span>
+
+    <!-- Your D-ID Link goes in src="" -->
+    <iframe id="avatarFrame"
+      src=""
+      style="width:100%; height:400px; border-radius:10px;"
+      allow="autoplay"
+      frameborder="0"
+      allowfullscreen>
+    </iframe>
+  </div>
+</div>
+
+</html>

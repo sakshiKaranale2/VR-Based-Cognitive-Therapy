@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - VR Cognitive Therapy</title>
+    <link rel="stylesheet" href="about.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1 class="logo">VR Cognitive Therapy</h1>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="#" id="profile-link" class="hidden">Profile</a></li>
+                <li><a href="#" id="login-link">Login</a></li>
+                <li><a href="#" id="logout-link" class="hidden" onclick="handleLogout()">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <section class="about-section">
+            <h1>About VR Cognitive Therapy</h1>
+            <p>
+                VR Cognitive Therapy is an innovative platform that integrates Virtual Reality (VR) technology with 
+                Cognitive Behavioral Therapy (CBT) to provide immersive, effective mental health treatment. Our platform 
+                addresses the growing need for accessible, engaging, and personalized therapy solutions for conditions 
+                such as anxiety, depression, PTSD, and stress.
+            </p>
+            <p>
+                By creating controlled, realistic virtual environments, we enable users to safely confront and manage 
+                their triggers while receiving real-time feedback and personalized guidance. This technology-driven 
+                approach makes mental health support more accessible and engaging than traditional therapy methods.
+            </p>
+        </section>
+
+        <section class="objectives">
+            <h2>Project Objectives</h2>
+            <ul>
+                <li>🔹 Develop an immersive VR-based CBT platform to manage mental health conditions effectively</li>
+                <li>🔹 Implement real-time tracking and personalized feedback to improve therapy sessions</li>
+                <li>🔹 Provide a safe and adjustable therapy environment simulating real-life stressors</li>
+                <li>🔹 Enhance accessibility and engagement in mental health treatment through VR technology</li>
+            </ul>
+        </section>
+
+        <section class="modules">
+            <h2>System Modules</h2>
+            <div class="modules-grid">
+                <div class="module-card">
+                    <h3>VR Therapy Module</h3>
+                    <p>Five immersive views focused on stress relief with interactive features such as guided breathing and relaxation exercises.</p>
+                </div>
+                <div class="module-card">
+                    <h3>User Management Module</h3>
+                    <p>Website allowing user login and profile management with Firebase for authentication and secure data storage.</p>
+                </div>
+                <div class="module-card">
+                    <h3>Information & Feedback Module</h3>
+                    <p>Display information about therapy environments and collect user feedback and experience-related data.</p>
+                </div>
+                <div class="module-card">
+                    <h3>Data Analytics Module</h3>
+                    <p>Analyze user feedback for platform improvement and provide insights to enhance therapy experiences.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="technology">
+            <h2>Technologies Used</h2>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <h4>Frontend</h4>
+                    <p>HTML5, CSS3, JavaScript</p>
+                </div>
+                <div class="tech-item">
+                    <h4>Backend</h4>
+                    <p>Python (Flask), Firebase (Authentication & Firestore)</p>
+                </div>
+                <div class="tech-item">
+                    <h4>VR Development</h4>
+                    <p>Unity, C#</p>
+                </div>
+                <div class="tech-item">
+                    <h4>Database</h4>
+                    <p>Firebase Firestore, MySQL</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="outcomes">
+            <h2>Project Outcomes</h2>
+            <ul>
+                <li>🔹 VR Environment Design Blueprints</li>
+                <li>🔹 Conceptual Framework for VR-Based Cognitive Behavioral Therapy</li>
+                <li>🔹 VR Environment and Interaction Prototypes</li>
+                <li>🔹 Research and Analysis on VR Therapy Effectiveness</li>
+                <li>🔹 Immersive Sound Design and Audio Therapy Strategies</li>
+                <li>🔹 Safety Guidelines and Ethical Considerations for VR Therapy</li>
+                <li>🔹 Evaluation Metrics for Therapy Session Effectiveness</li>
+            </ul>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

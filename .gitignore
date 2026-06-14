@@ -1,0 +1,6 @@
+ml_model/env/
+__pycache__/
+*.pyc
+*.pyo
+*.h5
+*.pkl

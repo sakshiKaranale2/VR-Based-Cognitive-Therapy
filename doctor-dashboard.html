@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard - VR Cognitive Therapy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1 class="logo">VR Cognitive Therapy</h1>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="doctor-dashboard.html" class="active">Doctor Dashboard</a></li>
+                <li><a href="#" id="logout-link-dashboard">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h1 class="dashboard-title" style="margin: 0;">👨‍⚕️ Doctor Dashboard</h1>
+            <button id="refresh-dashboard-btn" style="padding: 10px 20px; background: #87C5A4; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+        </div>
+        
+        <!-- Patient Overview -->
+        <section class="dashboard-section">
+            <h2>👥 All Patients & Sessions</h2>
+            <div class="patients-table-container">
+                <table class="patients-table">
+                    <thead>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Age</th>
+                            <th>Total Sessions</th>
+                            <th>Latest Stress Level</th>
+                            <th>Recovery Status</th>
+                            <th>Last Session</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="patients-table-body">
+                        <tr>
+                            <td colspan="7" class="loading-text">Loading patients...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Recent Sessions -->
+        <section class="dashboard-section">
+            <h2>📋 Recent Therapy Sessions</h2>
+            <div class="sessions-list" id="recent-sessions-list">
+                <p class="loading-text">Loading recent sessions...</p>
+            </div>
+        </section>
+
+        <!-- Treatment Effectiveness -->
+        <section class="dashboard-section">
+            <h2>📊 Treatment Effectiveness Analytics</h2>
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h3>Total Patients</h3>
+                    <p class="analytics-value" id="total-patients">0</p>
+                </div>
+                <div class="analytics-card">
+                    <h3>Active Patients</h3>
+                    <p class="analytics-value" id="active-patients">0</p>
+                </div>
+                <div class="analytics-card">
+                    <h3>Average Session Rating</h3>
+                    <p class="analytics-value" id="avg-rating">-</p>
+                </div>
+                <div class="analytics-card">
+                    <h3>Success Rate</h3>
+                    <p class="analytics-value" id="success-rate">-</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Patient Details Modal -->
+        <div id="patient-details-modal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close-modal" id="close-patient-details">&times;</span>
+                <h2 id="patient-details-name">Patient Details</h2>
+                <div id="patient-details-content">
+                    <p class="loading-text">Loading patient details...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="doctor-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard - VR Cognitive Therapy</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1 class="logo">VR Cognitive Therapy</h1>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="patient-dashboard.html" class="active">My Dashboard</a></li>
+                <li><a href="#" onclick="handleLogout()">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <h1 class="dashboard-title">My Therapy Dashboard</h1>
+        
+        <!-- Stress Level History -->
+        <section class="dashboard-section">
+            <h2>📊 Stress Level History</h2>
+            <div class="stress-history-chart" id="stress-history">
+                <p class="loading-text">Loading your stress history...</p>
+            </div>
+        </section>
+
+        <!-- Recent Sessions -->
+        <section class="dashboard-section">
+            <h2>🎮 Recent VR Therapy Sessions</h2>
+            <div class="sessions-list" id="sessions-list">
+                <p class="loading-text">Loading sessions...</p>
+            </div>
+        </section>
+
+        <!-- Progress Summary -->
+        <section class="dashboard-section">
+            <h2>📈 Progress Summary</h2>
+            <div class="progress-cards">
+                <div class="progress-card">
+                    <h3>Total Sessions</h3>
+                    <p class="progress-value" id="total-sessions">0</p>
+                </div>
+                <div class="progress-card">
+                    <h3>Average Stress Level</h3>
+                    <p class="progress-value" id="avg-stress">-</p>
+                </div>
+                <div class="progress-card">
+                    <h3>Improvement Rate</h3>
+                    <p class="progress-value" id="improvement-rate">-</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="patient-dashboard.js"></script>
+</body>
+</html>
+
